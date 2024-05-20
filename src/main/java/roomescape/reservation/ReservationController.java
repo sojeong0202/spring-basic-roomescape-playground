@@ -14,8 +14,7 @@ import java.util.List;
 
 @RestController
 public class ReservationController {
-
-    private final ReservationService reservationService;
+    private ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
         this.reservationService = reservationService;
@@ -36,6 +35,10 @@ public class ReservationController {
         ReservationResponse reservation = reservationService.save(memberResponse, reservationRequest);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
+    }
+    @GetMapping("/reservations-mine")
+    public List<MyReservationResponse> mine( MemberResponse memberResponse) {
+        return reservationService.findMine(memberResponse);
     }
 
     @DeleteMapping("/reservations/{id}")
