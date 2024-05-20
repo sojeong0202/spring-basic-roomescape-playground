@@ -1,16 +1,20 @@
 package roomescape.time;
 
-public class Time {
-    private Long id;
-    private String value;
+import jakarta.persistence.*;
 
-    public Time(Long id, String value) {
+@Entity
+public class Time {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String time_value;
+
+    public Time(Long id, String time_value) {
         this.id = id;
-        this.value = value;
+        this.time_value = time_value;
     }
 
-    public Time(String value) {
-        this.value = value;
+    public Time(String time_value) {
+        this.time_value = time_value;
     }
 
     public Time() {
@@ -21,7 +25,7 @@ public class Time {
         return id;
     }
 
-    public String getValue() {
-        return value;
+    public String getTime_value() {
+        return time_value;
     }
 }
