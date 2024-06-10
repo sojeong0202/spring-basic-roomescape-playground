@@ -1,14 +1,16 @@
 package roomescape.reservation;
 
-public class ReservationRequest {
-    private String name;
-    private String date;
-    private Long theme;
-    private Long time;
+import org.jetbrains.annotations.NotNull;
 
-    public String getName() {
-        return name;
-    }
+public class ReservationRequest {
+    @NotNull
+    private String date;
+
+    @NotNull
+    private Long theme;
+
+    @NotNull
+    private Long time;
 
     public String getDate() {
         return date;
