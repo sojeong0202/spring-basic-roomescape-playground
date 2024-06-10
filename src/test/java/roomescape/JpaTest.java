@@ -2,6 +2,7 @@ package roomescape;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import roomescape.time.Time;
@@ -25,5 +26,17 @@ public class JpaTest {
         Time persistTime = timeRepository.findById(time.getId()).orElse(null);
 //        assertThat(persistTime.getValue()).isEqualTo(time.getValue());
 //        assertThat(persistTime.getTime()).isEqualTo(time.getTime());
+
+        assertThat(persistTime.getTime_value()).isEqualTo(time.getTime_value());
     }
+
+    @Value("${roomescape.auth.jwt.secret}")
+    private String secretKey;
+
+    @Test
+    void 팔단계() {
+        assertThat(secretKey).isNotBlank();
+    }
+
+
 }
