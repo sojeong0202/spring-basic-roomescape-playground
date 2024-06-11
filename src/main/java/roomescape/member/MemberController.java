@@ -32,6 +32,12 @@ public class MemberController {
     }
 
     @PostMapping("/login")
+    public ResponseEntity login (@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        String token = memberService.login(loginRequest);
+
+        Cookie cookie = new Cookie("token", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
     public ResponseEntity login(@RequestBody Member member, HttpServletResponse response) {
         String accessToken = tokenProvider.createAccessToken(member);
         Cookie cookie = cookieProvider.createCookie(accessToken);
@@ -40,6 +46,12 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+
+    @GetMapping("/login/check")
+    public ResponseEntity<MemberResponse> checkLogin (MemberResponse memberResponse) {
+
+        MemberResponse checkMember = memberService.findById(memberResponse.getId());
+        return ResponseEntity.ok(checkMember);
     @GetMapping("/login/check")
     public ResponseEntity<LoginResponse> checkLogin(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
