@@ -1,41 +1,42 @@
-CREATE TABLE time
-(
-    id         BIGINT      NOT NULL AUTO_INCREMENT,
-    time_value VARCHAR(20) NOT NULL,
-    deleted    BOOLEAN     NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE theme
-(
-    id          BIGINT       NOT NULL AUTO_INCREMENT,
-    name        VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
-    deleted     BOOLEAN      NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE member
-(
-    id       BIGINT              NOT NULL AUTO_INCREMENT,
-    name     VARCHAR(255)        NOT NULL,
-    email    VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255)        NOT NULL,
-    role     VARCHAR(255)        NOT NULL,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE reservation
-(
-    id       BIGINT       NOT NULL AUTO_INCREMENT,
-    date     VARCHAR(255) NOT NULL,
-    name     VARCHAR(255) NOT NULL,
-    time_id  BIGINT,
-    theme_id BIGINT,
-    PRIMARY KEY (id),
-    FOREIGN KEY (time_id) REFERENCES time (id),
-    FOREIGN KEY (theme_id) REFERENCES theme (id)
-);
+-- JPA create-drop ddl-auto 추가로 인해 DDL문 주석처리
+-- CREATE TABLE time
+-- (
+--     id         BIGINT      NOT NULL AUTO_INCREMENT,
+--     time_value VARCHAR(20) NOT NULL,
+--     deleted    BOOLEAN     NOT NULL DEFAULT FALSE,
+--     PRIMARY KEY (id)
+-- );
+--
+-- CREATE TABLE theme
+-- (
+--     id          BIGINT       NOT NULL AUTO_INCREMENT,
+--     name        VARCHAR(255) NOT NULL,
+--     description VARCHAR(255) NOT NULL,
+--     deleted     BOOLEAN      NOT NULL DEFAULT FALSE,
+--     PRIMARY KEY (id)
+-- );
+--
+-- CREATE TABLE member
+-- (
+--     id       BIGINT              NOT NULL AUTO_INCREMENT,
+--     name     VARCHAR(255)        NOT NULL,
+--     email    VARCHAR(255) UNIQUE NOT NULL,
+--     password VARCHAR(255)        NOT NULL,
+--     role     VARCHAR(255)        NOT NULL,
+--     PRIMARY KEY (id)
+-- );
+--
+-- CREATE TABLE reservation
+-- (
+--     id       BIGINT       NOT NULL AUTO_INCREMENT,
+--     date     VARCHAR(255) NOT NULL,
+--     name     VARCHAR(255) NOT NULL,
+--     time_id  BIGINT,
+--     theme_id BIGINT,
+--     PRIMARY KEY (id),
+--     FOREIGN KEY (time_id) REFERENCES time (id),
+--     FOREIGN KEY (theme_id) REFERENCES theme (id)
+-- );
 
 INSERT INTO member (name, email, password, role)
 VALUES ('어드민', 'admin@email.com', 'password', 'ADMIN'),
@@ -54,7 +55,12 @@ VALUES ('10:00'),
        ('18:00'),
        ('20:00');
 
+-- 예약 페이지에서 예약을 추가하는 경우(사용자, 어드민 둘 다 접근 가능)
+INSERT INTO reservation (member_id, name, date, time_id, theme_id)
+VALUES (1, '', '2024-03-01', 1, 1),
+       (1, '', '2024-03-01', 2, 2),
+       (1, '', '2024-03-01', 3, 3);
+
+-- 어드민 페이지에서 예약을 추가하는 경우(어드민만 접근 가능)
 INSERT INTO reservation (name, date, time_id, theme_id)
-VALUES ('어드민', '2024-03-01', 1, 1),
-       ('어드민', '2024-03-01', 2, 2),
-       ('어드민', '2024-03-01', 3, 3);
+VALUES ('브라운', '2024-03-01', 1, 2);
