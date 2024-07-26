@@ -22,7 +22,24 @@ public class MemberController {
     @PostMapping("/members")
     public ResponseEntity createMember(@RequestBody MemberRequest memberRequest) {
         MemberResponse member = memberService.createMember(memberRequest);
+
         return ResponseEntity.created(URI.create("/members/" + member.getId())).body(member);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+        Cookie cookie = new Cookie("token", memberService.getAccessTokenByLoginInfo(loginRequest));
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/login/check")
+    public ResponseEntity getMemberInfoByCookie(HttpServletRequest request) {
+
+        return ResponseEntity.ok().body(memberService.getMemberInfoByToken(extractTokenFromCookie(request.getCookies())));
     }
 
     @PostMapping("/logout")
@@ -32,6 +49,17 @@ public class MemberController {
         cookie.setPath("/");
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+
         return ResponseEntity.ok().build();
+    }
+
+    private String extractTokenFromCookie(Cookie[] cookies) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("token")) {
+                return cookie.getValue();
+            }
+        }
+
+        return "";
     }
 }
