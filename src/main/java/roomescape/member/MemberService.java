@@ -30,6 +30,17 @@ public class MemberService {
         return new MemberNameResponse(getClaims(accessToken).get("name").toString());
     }
 
+    public Member getLoginMemberInfoByToken(String accessToken) {
+        Claims claims = getClaims(accessToken);
+
+        return new Member(
+                claims.get("id").toString(),
+                claims.get("name").toString(),
+                claims.get("email").toString(),
+                claims.get("role").toString()
+        );
+    }
+
     private Member getMemberByLoginInfo(LoginRequest loginRequest) {
         return memberDao.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
     }
@@ -37,13 +48,15 @@ public class MemberService {
     private String makeAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
+                .claim("id", member.getId())
                 .claim("name", member.getName())
+                .claim("email", member.getEmail())
                 .claim("role", member.getRole())
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
     }
 
-    public Claims getClaims(String accessToken) {
+    private Claims getClaims(String accessToken) {
         return Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .build()
