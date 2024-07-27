@@ -1,6 +1,7 @@
 package roomescape.member;
 
-import jakarta.servlet.http.Cookie;
+import static roomescape.Parser.extractTokenFromCookie;
+
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -10,7 +11,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     public LoginMemberArgumentResolver(MemberService memberService) {
         this.memberService = memberService;
@@ -29,15 +30,5 @@ public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolve
 
         Member member = memberService.getLoginMemberInfoByToken(extractTokenFromCookie(request.getCookies()));
         return new LoginMember(member.getName(), member.getEmail(), member.getRole());
-    }
-
-    private String extractTokenFromCookie(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")) {
-                return cookie.getValue();
-            }
-        }
-
-        return "";
     }
 }

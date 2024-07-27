@@ -1,5 +1,7 @@
 package roomescape.member;
 
+import static roomescape.Parser.extractTokenFromCookie;
+
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,7 +16,7 @@ import java.net.URI;
 @RestController
 public class MemberController {
 
-    private MemberService memberService;
+    private final MemberService memberService;
 
     public MemberController(MemberService memberService) {
         this.memberService = memberService;
@@ -52,15 +54,5 @@ public class MemberController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok().build();
-    }
-
-    private String extractTokenFromCookie(Cookie[] cookies) {
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")) {
-                return cookie.getValue();
-            }
-        }
-
-        return "";
     }
 }

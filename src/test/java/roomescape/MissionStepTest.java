@@ -86,6 +86,30 @@ public class MissionStepTest {
         assertThat(adminResponse.as(ReservationResponse.class).getName()).isEqualTo("브라운");
     }
 
+    @Test
+    @DisplayName("admin 권한 없는 사람이 어드민 페이지에 진입할 경우 401 응답 코드 테스트")
+    void should_responseStatusCode401_when_hasNotAdminRoleRequestAdminPage() {
+        String brownToken = createToken("brown@email.com", "password");
+
+        RestAssured.given().log().all()
+                .cookie("token", brownToken)
+                .get("/admin")
+                .then().log().all()
+                .statusCode(401);
+    }
+
+    @Test
+    @DisplayName("admin 권한 있는 사람이 어드민 페이지에 진입할 경우 200 응답 코드 테스트")
+    void should_responseStatusCode200_when_hasAdminRoleRequestAdminPage() {
+        String adminToken = createToken("admin@email.com", "password");
+
+        RestAssured.given().log().all()
+                .cookie("token", adminToken)
+                .get("/admin")
+                .then().log().all()
+                .statusCode(200);
+    }
+
     private String createToken(String email, String password) {
         Map<String, String> params = new HashMap<>();
         params.put("email", email);
