@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+
     private MemberDao memberDao;
 
     @Value("${roomescape.auth.jwt.secret}")
@@ -34,7 +35,6 @@ public class MemberService {
         Claims claims = getClaims(accessToken);
 
         return new Member(
-                claims.get("id").toString(),
                 claims.get("name").toString(),
                 claims.get("email").toString(),
                 claims.get("role").toString()
@@ -48,7 +48,6 @@ public class MemberService {
     private String makeAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject(member.getId().toString())
-                .claim("id", member.getId())
                 .claim("name", member.getName())
                 .claim("email", member.getEmail())
                 .claim("role", member.getRole())

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class MemberDao {
+
     private JdbcTemplate jdbcTemplate;
 
     public MemberDao(JdbcTemplate jdbcTemplate) {
