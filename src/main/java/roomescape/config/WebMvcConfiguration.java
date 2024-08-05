@@ -15,7 +15,7 @@ import roomescape.member.TokenProvider;
 @EnableWebMvc
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    private TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
     public WebMvcConfiguration(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
@@ -28,6 +28,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CheckLoginInterceptor(tokenProvider)).addPathPatterns("/admin");
+        registry.addInterceptor(new CheckLoginInterceptor(tokenProvider)).addPathPatterns("/admin/**");
     }
 }
