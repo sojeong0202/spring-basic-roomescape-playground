@@ -20,13 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MissionStepTest {
 
     @Test
-    @DisplayName("로그인 요청에 대한 응답 API 테스트")
+    @DisplayName("로그인 요청 시 쿠키에서 토큰을 가져온다.")
     void should_getTokenInCookie_when_requestLoginWithEmailAndPassword() {
         assertThat(createToken("admin@email.com", "password")).isNotBlank();
     }
 
     @Test
-    @DisplayName("인증 정보 조회 API 테스트")
+    @DisplayName("쿠키에서 토큰 정보를 추출하여 멤버를 찾고 멤버 정보를 응답한다.")
     void should_responseMemberInfo_when_requestLoginCheckWithCookie() {
         String token = createToken("admin@email.com", "password");
 
@@ -42,7 +42,7 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("ReservationReqeust에 name값이 없을 경우 로그인 정보를 활용하여 Member 조회 테스트")
+    @DisplayName("ReservationReqeust에 name값이 없을 경우 로그인 정보를 활용하여 Member를 조회한다.")
     void should_createReservationWithLoginInfo_when_hasNotNameArgumentInReservationRequest() {
         String token = createToken("admin@email.com", "password");  // 일단계에서 토큰을 추출하는 로직을 메서드로 따로 만들어서 활용하세요.
 
@@ -64,7 +64,7 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("ReservationRequest에 name값이 있을 경우 name으로 Member 조회 테스트")
+    @DisplayName("ReservationRequest에 name값이 있을 경우 name으로 Member를 조회한다.")
     void should_createReservationWithName_when_hasNameArgumentInReservationRequest() {
         String token = createToken("admin@email.com", "password");  // 일단계에서 토큰을 추출하는 로직을 메서드로 따로 만들어서 활용하세요.
 
@@ -87,7 +87,7 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("admin 권한 없는 사람이 어드민 페이지에 진입할 경우 401 응답 코드 테스트")
+    @DisplayName("admin 권한 없는 사람이 어드민 페이지에 진입할 경우 401로 응답한다.")
     void should_responseStatusCode401_when_hasNotAdminRoleRequestAdminPage() {
         String brownToken = createToken("brown@email.com", "password");
 
@@ -99,7 +99,7 @@ public class MissionStepTest {
     }
 
     @Test
-    @DisplayName("admin 권한 있는 사람이 어드민 페이지에 진입할 경우 200 응답 코드 테스트")
+    @DisplayName("admin 권한 있는 사람이 어드민 페이지에 진입할 경우 200로 응답한다.")
     void should_responseStatusCode200_when_hasAdminRoleRequestAdminPage() {
         String adminToken = createToken("admin@email.com", "password");
 
