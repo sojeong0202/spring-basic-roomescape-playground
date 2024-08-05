@@ -1,65 +1,37 @@
 package roomescape.member;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
 
-    private MemberDao memberDao;
+    private final MemberDao memberDao;
+    private final TokenProvider tokenProvider;
 
-    @Value("${roomescape.auth.jwt.secret}")
-    private String secretKey;
-
-    public MemberService(MemberDao memberDao) {
+    public MemberService(MemberDao memberDao, TokenProvider tokenProvider) {
         this.memberDao = memberDao;
-    }
-
-    public MemberResponse createMember(MemberRequest memberRequest) {
-        Member member = memberDao.save(new Member(memberRequest.getName(), memberRequest.getEmail(), memberRequest.getPassword(), "USER"));
-        return new MemberResponse(member.getId(), member.getName(), member.getEmail());
+        this.tokenProvider = tokenProvider;
     }
 
     public String getAccessTokenByLoginInfo(LoginRequest loginRequest) {
-        return makeAccessToken(getMemberByLoginInfo(loginRequest));
+        return tokenProvider.makeAccessToken(getMemberByLoginInfo(loginRequest));
     }
 
-    public MemberNameResponse getMemberInfoByToken(String accessToken) {
-        return new MemberNameResponse(getClaims(accessToken).get("name").toString());
+    public MemberResponse createMember(MemberRequest memberRequest) {
+        Member member = memberDao.save(
+                new Member(
+                        memberRequest.getName(),
+                        memberRequest.getEmail(),
+                        memberRequest.getPassword(),
+                        "USER"));
+        return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
-    public Member getLoginMemberInfoByToken(String accessToken) {
-        Claims claims = getClaims(accessToken);
-
-        return new Member(
-                claims.get("name").toString(),
-                claims.get("email").toString(),
-                claims.get("role").toString()
-        );
+    public MemberNameResponse getName(String accessToken) {
+        return new MemberNameResponse(tokenProvider.getMemberInfoByToken(accessToken));
     }
 
     private Member getMemberByLoginInfo(LoginRequest loginRequest) {
         return memberDao.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
-    }
-
-    private String makeAccessToken(Member member) {
-        return Jwts.builder()
-                .setSubject(member.getId().toString())
-                .claim("name", member.getName())
-                .claim("email", member.getEmail())
-                .claim("role", member.getRole())
-                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .compact();
-    }
-
-    private Claims getClaims(String accessToken) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
     }
 }

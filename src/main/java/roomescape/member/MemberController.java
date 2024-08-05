@@ -1,7 +1,5 @@
 package roomescape.member;
 
-import static roomescape.Parser.extractTokenFromCookie;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +15,11 @@ import java.net.URI;
 public class MemberController {
 
     private final MemberService memberService;
+    private final TokenProvider tokenProvider;
 
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, TokenProvider tokenProvider) {
         this.memberService = memberService;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping("/members")
@@ -42,7 +42,10 @@ public class MemberController {
     @GetMapping("/login/check")
     public ResponseEntity getMemberInfoByCookie(HttpServletRequest request) {
 
-        return ResponseEntity.ok().body(memberService.getMemberInfoByToken(extractTokenFromCookie(request.getCookies())));
+        return ResponseEntity.ok()
+                .body(memberService.getName(
+                        tokenProvider.extractTokenFromCookie(request.getCookies())
+                ));
     }
 
     @PostMapping("/logout")

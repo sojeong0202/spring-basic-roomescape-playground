@@ -9,24 +9,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import roomescape.member.CheckLoginInterceptor;
 import roomescape.member.LoginMemberArgumentResolver;
 import roomescape.member.MemberService;
+import roomescape.member.TokenProvider;
 
 @Configuration
 @EnableWebMvc
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
-    private MemberService memberService;
+    private TokenProvider tokenProvider;
 
-    public WebMvcConfiguration(MemberService memberService) {
-        this.memberService = memberService;
+    public WebMvcConfiguration(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new LoginMemberArgumentResolver(memberService));
+        resolvers.add(new LoginMemberArgumentResolver(tokenProvider));
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new CheckLoginInterceptor(memberService)).addPathPatterns("/admin");
+        registry.addInterceptor(new CheckLoginInterceptor(tokenProvider)).addPathPatterns("/admin");
     }
 }
