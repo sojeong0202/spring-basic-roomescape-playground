@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,9 @@ public class TokenProvider {
 
     @Value("${roomescape.auth.jwt.secret}")
     private String secretKey;
+    @Value("${roomescape.auth.jwt.accessTokenValidTime}")
+    private int accessTokenValidTime;
+    Date now = new Date();
 
     public String extractTokenFromCookie(Cookie[] cookies) {
         for (Cookie cookie : cookies) {
@@ -29,6 +33,8 @@ public class TokenProvider {
                 .claim("name", member.getName())
                 .claim("email", member.getEmail())
                 .claim("role", member.getRole())
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + accessTokenValidTime))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
     }
