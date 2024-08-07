@@ -12,7 +12,6 @@ import roomescape.member.MemberService;
 import roomescape.member.TokenProvider;
 
 @Configuration
-@EnableWebMvc
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final TokenProvider tokenProvider;
