@@ -1,5 +1,7 @@
 package roomescape.member;
 
+import static roomescape.member.Authority.USER;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,13 +19,13 @@ public class MemberService {
         return tokenProvider.makeAccessToken(getMemberByLoginInfo(loginRequest));
     }
 
-    public MemberResponse createMember(MemberRequest memberRequest) {
+    public MemberResponse createMemberRoleUser(MemberRequest memberRequest) {
         Member member = memberDao.save(
                 new Member(
                         memberRequest.getName(),
                         memberRequest.getEmail(),
                         memberRequest.getPassword(),
-                        "USER"));
+                        USER.toString()));
         return new MemberResponse(member.getId(), member.getName(), member.getEmail());
     }
 
