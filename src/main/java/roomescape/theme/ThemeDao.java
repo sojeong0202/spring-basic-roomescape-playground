@@ -9,7 +9,8 @@ import java.util.List;
 
 @Repository
 public class ThemeDao {
-    private JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     public ThemeDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

@@ -6,7 +6,8 @@ import java.util.List;
 
 @Service
 public class ReservationService {
-    private ReservationDao reservationDao;
+
+    private final ReservationDao reservationDao;
 
     public ReservationService(ReservationDao reservationDao) {
         this.reservationDao = reservationDao;
