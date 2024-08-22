@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberService {
 
-    private final MemberDao memberDao;
+    private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
 
-    public MemberService(MemberDao memberDao, TokenProvider tokenProvider) {
-        this.memberDao = memberDao;
+    public MemberService(MemberRepository memberRepository, TokenProvider tokenProvider) {
+        this.memberRepository = memberRepository;
         this.tokenProvider = tokenProvider;
     }
 
@@ -20,7 +20,7 @@ public class MemberService {
     }
 
     public MemberResponse createMemberRoleUser(MemberRequest memberRequest) {
-        Member member = memberDao.save(
+        Member member = memberRepository.save(
                 new Member(
                         memberRequest.getName(),
                         memberRequest.getEmail(),
@@ -34,6 +34,6 @@ public class MemberService {
     }
 
     private Member getMemberByLoginInfo(LoginRequest loginRequest) {
-        return memberDao.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
+        return memberRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
     }
 }
