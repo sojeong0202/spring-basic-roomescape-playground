@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS time;
+DROP TABLE IF EXISTS theme;
+DROP TABLE IF EXISTS member;
+
 CREATE TABLE time
 (
     id         BIGINT      NOT NULL AUTO_INCREMENT,
@@ -36,6 +41,8 @@ CREATE TABLE reservation
     FOREIGN KEY (time_id) REFERENCES time (id),
     FOREIGN KEY (theme_id) REFERENCES theme (id)
 );
+
+
 
 INSERT INTO member (name, email, password, role)
 VALUES ('어드민', 'admin@email.com', 'password', 'ADMIN'),
