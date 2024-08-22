@@ -128,7 +128,8 @@ public class MissionStepTest {
     }
 
     @Test
-    void 오단계() {
+    @DisplayName("토큰에서 사용자 정보를 가져와 그 사용자의 예약 목록을 조회한다.")
+    void should_getAllReservationsByMember_when_requestMemberReservationGetMethodWithToken() {
         String adminToken = createToken("admin@email.com", "password");
 
         List<MyReservationResponse> reservations = RestAssured.given().log().all()
