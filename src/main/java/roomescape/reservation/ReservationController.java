@@ -37,7 +37,15 @@ public class ReservationController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (reservationRequest.getName() == null) {
+        if (loginMember.getRole() == "ADMIN") {
+            reservationRequest = new ReservationRequest(
+                    reservationRequest.getName(),
+                    reservationRequest.getDate(),
+                    reservationRequest.getTheme(),
+                    reservationRequest.getTime());
+        }
+
+        if (loginMember.getRole() == "USER" || reservationRequest.getName() == null) {
             reservationRequest = new ReservationRequest(
                     loginMember.getName(),
                     reservationRequest.getDate(),
@@ -47,6 +55,11 @@ public class ReservationController {
         ReservationResponse reservation = reservationService.save(reservationRequest);
 
         return ResponseEntity.created(URI.create("/reservations/" + reservation.getId())).body(reservation);
+    }
+
+    @GetMapping("/reservations-mine")
+    public ResponseEntity findAllByMember(@AuthUser LoginMember loginMember) {
+        return ResponseEntity.ok().body(reservationService.findAllByMember(loginMember));
     }
 
     @DeleteMapping("/reservations/{id}")

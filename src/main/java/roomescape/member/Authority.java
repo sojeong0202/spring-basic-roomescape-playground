@@ -1,5 +1,5 @@
 package roomescape.member;
 
 public enum Authority {
-    USER
+    USER, ADMIN
 }

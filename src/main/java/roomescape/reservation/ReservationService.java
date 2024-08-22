@@ -3,6 +3,7 @@ package roomescape.reservation;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import roomescape.member.LoginMember;
 import roomescape.theme.Theme;
 import roomescape.theme.ThemeRepository;
 import roomescape.time.Time;
@@ -47,5 +48,22 @@ public class ReservationService {
         return reservationRepository.findAll().stream()
                 .map(it -> new ReservationResponse(it.getId(), it.getName(), it.getTheme().getName(), it.getDate(), it.getTime().getValue()))
                 .toList();
+    }
+
+    public List<MyReservationResponse> findAllByMember(LoginMember loginMember) {
+        return reservationRepository.findByMember_Email(loginMember.getEmail())
+                .stream()
+                .map(this::convertToMyReservationResponse)
+                .toList();
+    }
+
+    private MyReservationResponse convertToMyReservationResponse(Reservation reservation) {
+        return new MyReservationResponse(
+                reservation.getId(),
+                reservation.getTheme().getName(),
+                reservation.getDate(),
+                reservation.getTime().getValue(),
+                "예약"
+        );
     }
 }
